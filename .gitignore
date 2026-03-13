@@ -1,5 +1,8 @@
 # Maven build
 target/
+.settings/
+.project
+.classpath
 
 # Logs
 *.log
