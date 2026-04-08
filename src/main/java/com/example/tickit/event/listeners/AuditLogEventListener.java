@@ -9,12 +9,12 @@ import com.example.tickit.events.AuditEvent;
 import com.example.tickit.services.AuditLogService;
 
 @Component
-public class AuditEventListener {
+public class AuditLogEventListener {
 
 	@Autowired
 	private AuditLogService auditLogService;
 
-	public AuditEventListener() {
+	public AuditLogEventListener() {
 		super();
 	}
 

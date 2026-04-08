@@ -14,9 +14,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "statuses")
+@Table(name = "statuses", uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "category" }) })
 public class Status {
 
 	@Id

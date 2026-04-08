@@ -17,14 +17,8 @@ public class IssueResponseVM {
 
 	private Long sprintId;
 
-	public IssueResponseVM(Long id, String title, String description, String status, Long assigneeId, Long sprintId) {
+	public IssueResponseVM() {
 		super();
-		this.id = id;
-		this.title = title;
-		this.description = description;
-		this.status = status;
-		this.assigneeId = assigneeId;
-		this.sprintId = sprintId;
 	}
 
 	public void setId(Long id) {
@@ -49,6 +43,30 @@ public class IssueResponseVM {
 
 	public void setSprintId(Long sprintId) {
 		this.sprintId = sprintId;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public Long getAssigneeId() {
+		return assigneeId;
+	}
+
+	public Long getSprintId() {
+		return sprintId;
 	}
 
 }

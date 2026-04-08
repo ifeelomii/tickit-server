@@ -59,6 +59,9 @@ public class Issue implements Auditable, SnapshotAware {
 	@Column(name = "deleted", nullable = false)
 	private boolean deleted = false;
 
+	@Column(name = "create_date", nullable = false)
+	private LocalDateTime createDate = LocalDateTime.now();
+
 //	@AuditableField(name = "Issue Type")
 	@Enumerated(EnumType.STRING)
 	private IssueTypes issueType;
@@ -227,6 +230,14 @@ public class Issue implements Auditable, SnapshotAware {
 
 	public void setWatchers(Set<User> watchers) {
 		this.watchers = watchers;
+	}
+
+	public LocalDateTime getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(LocalDateTime createDate) {
+		this.createDate = createDate;
 	}
 
 	@Override
