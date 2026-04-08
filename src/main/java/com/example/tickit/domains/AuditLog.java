@@ -1,6 +1,6 @@
 package com.example.tickit.domains;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -8,17 +8,20 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "audit_logs")
+@SequenceGenerator(name = "audit_log_seq", sequenceName = "audit_log_seq", allocationSize = 1)
 public class AuditLog {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "audit_log_seq")
 	private Long id;
 
-	@Column(name = "public_id", nullable = false, unique = true, updatable = false)
+	@Column(name = "public_id", unique = true, updatable = false)
 	private UUID publicId = UUID.randomUUID();
 
 	private String entityName;
@@ -33,7 +36,7 @@ public class AuditLog {
 
 	private String modifiedBy;
 
-	private Instant modifiedAt;
+	private LocalDateTime modifiedAt = LocalDateTime.now();
 
 	public Long getId() {
 		return id;
@@ -99,11 +102,18 @@ public class AuditLog {
 		this.modifiedBy = modifiedBy;
 	}
 
-	public Instant getModifiedAt() {
+	public LocalDateTime getModifiedAt() {
 		return modifiedAt;
 	}
 
-	public void setModifiedAt(Instant modifiedAt) {
+	public void setModifiedAt(LocalDateTime modifiedAt) {
 		this.modifiedAt = modifiedAt;
+	}
+
+	@PrePersist
+	public void prePersist() {
+		if (publicId == null) {
+			publicId = UUID.randomUUID();
+		}
 	}
 }
