@@ -20,8 +20,23 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(exObj, ex.getStatus());
 	}
 
+	@ExceptionHandler(UserNotFoundException.class)
+	public ResponseEntity<GlobalExceptionResponseObject> handleUserNotFoundException(UserNotFoundException ex) {
+		GlobalExceptionResponseObject exObj = new GlobalExceptionResponseObject(ex.getTitle(), ex.getMessage(),
+				ex.getEntityName(), ex.getStatus().value());
+		return new ResponseEntity<>(exObj, ex.getStatus());
+	}
+
 	@ExceptionHandler(StatusNotFoundException.class)
 	public ResponseEntity<GlobalExceptionResponseObject> handleStatusNotFoundException(StatusNotFoundException ex) {
+		GlobalExceptionResponseObject exObj = new GlobalExceptionResponseObject(ex.getTitle(), ex.getMessage(),
+				ex.getEntityName(), ex.getStatus().value());
+		return new ResponseEntity<>(exObj, ex.getStatus());
+	}
+
+	@ExceptionHandler(InvalidLoginCredentialsException.class)
+	public ResponseEntity<GlobalExceptionResponseObject> handleInvalidLoginCredentialsException(
+			InvalidLoginCredentialsException ex) {
 		GlobalExceptionResponseObject exObj = new GlobalExceptionResponseObject(ex.getTitle(), ex.getMessage(),
 				ex.getEntityName(), ex.getStatus().value());
 		return new ResponseEntity<>(exObj, ex.getStatus());
