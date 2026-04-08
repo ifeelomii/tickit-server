@@ -3,6 +3,7 @@ package com.example.tickit.domains;
 import java.util.UUID;
 
 import com.example.tickit.enums.UserStatuses;
+import com.example.tickit.vms.response.UserResponseVM;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,7 +28,13 @@ public class User {
 	private String email;
 
 	@Column(name = "user_name", unique = true, nullable = false)
-	private String username;
+	private String userName;
+
+	@Column(name = "first_name", nullable = false)
+	private String firstName;
+
+	@Column(name = "last_name", nullable = false)
+	private String lastName;
 
 	@Column(name = "password", nullable = false)
 	private String password;
@@ -60,12 +67,12 @@ public class User {
 		this.email = email;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getPassword() {
@@ -82,5 +89,33 @@ public class User {
 
 	public void setStatus(UserStatuses status) {
 		this.status = status;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public UserResponseVM toUserResponseVM() {
+		UserResponseVM response = new UserResponseVM();
+		response.setId(this.getId());
+		response.setUserName(this.getUserName());
+		response.setFirstName(this.getFirstName());
+		response.setLastName(this.getLastName());
+		response.setEmail(this.getEmail());
+		response.setPublicId(this.getPublicId());
+		response.setStatus(this.getStatus());
+		return response;
 	}
 }
