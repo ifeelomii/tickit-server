@@ -1,5 +1,5 @@
 package com.example.tickit.enums;
 
 public enum UserRoles {
-	ADMIN, DEVELOPER, TESTER, VIEWER
+	ADMIN, DEVELOPER, TESTER, USER
 }

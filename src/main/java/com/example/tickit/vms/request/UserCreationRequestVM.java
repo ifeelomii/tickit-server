@@ -1,12 +1,28 @@
 package com.example.tickit.vms.request;
 
-public class UserRequestVM {
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
+public class UserCreationRequestVM {
+
+	@Email
+	@NotBlank
 	private String email;
+
+	@NotBlank
 	private String userName;
+
+	@NotBlank
 	private String password;
+
+	@NotBlank
 	private String firstName;
+
+	@NotBlank
 	private String lastName;
+
+	@NotBlank
+	private String userRole;
 
 	public String getFirstName() {
 		return firstName;
@@ -46,5 +62,13 @@ public class UserRequestVM {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getUserRole() {
+		return userRole;
+	}
+
+	public void setUserRole(String userRole) {
+		this.userRole = userRole;
 	}
 }

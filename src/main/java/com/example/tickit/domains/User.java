@@ -2,8 +2,10 @@ package com.example.tickit.domains;
 
 import java.util.UUID;
 
+import com.example.tickit.enums.UserRoles;
 import com.example.tickit.enums.UserStatuses;
-import com.example.tickit.vms.response.UserResponseVM;
+import com.example.tickit.vms.response.LoginResponseVM;
+import com.example.tickit.vms.response.UserCreationResponseVM;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,6 +44,10 @@ public class User {
 	@Column(name = "user_status")
 	@Enumerated(EnumType.STRING)
 	private UserStatuses status;
+
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private UserRoles userRoles = UserRoles.USER;
 
 	public Long getId() {
 		return id;
@@ -107,8 +113,16 @@ public class User {
 		this.lastName = lastName;
 	}
 
-	public UserResponseVM toUserResponseVM() {
-		UserResponseVM response = new UserResponseVM();
+	public UserRoles getUserRoles() {
+		return userRoles;
+	}
+
+	public void setUserRoles(UserRoles userRoles) {
+		this.userRoles = userRoles;
+	}
+
+	public UserCreationResponseVM toUserCreationResponseVM() {
+		UserCreationResponseVM response = new UserCreationResponseVM();
 		response.setId(this.getId());
 		response.setUserName(this.getUserName());
 		response.setFirstName(this.getFirstName());
@@ -116,6 +130,20 @@ public class User {
 		response.setEmail(this.getEmail());
 		response.setPublicId(this.getPublicId());
 		response.setStatus(this.getStatus());
+		response.setUserRole(this.getUserRoles());
+		return response;
+	}
+
+	public LoginResponseVM toLoginResponseVM() {
+		LoginResponseVM response = new LoginResponseVM();
+		response.setUserId(this.getId());
+		response.setPublicId(this.getPublicId().toString());
+		response.setUserName(this.getUserName());
+		response.setFirstName(this.getFirstName());
+		response.setLastName(this.getLastName());
+		response.setEmail(this.getEmail());
+		response.setStatus(this.getStatus());
+		response.setUserRole(this.getUserRoles());
 		return response;
 	}
 }
