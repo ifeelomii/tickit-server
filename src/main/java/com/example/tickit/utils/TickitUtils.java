@@ -3,6 +3,9 @@ package com.example.tickit.utils;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import com.example.tickit.domains.User;
+import com.example.tickit.enums.UserRoles;
+
 public class TickitUtils {
 	public static boolean areStringsEqual(String str1, String str2) {
 		if (str1 == null && str2 == null) {
@@ -79,5 +82,9 @@ public class TickitUtils {
 			return bool1.equals(bool2);
 
 		}
+	}
+
+	public static boolean isRequestFromAdmin(User user) {
+		return UserRoles.ADMIN.equals(user.getUserRoles());
 	}
 }

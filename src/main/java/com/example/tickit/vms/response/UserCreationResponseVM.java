@@ -2,9 +2,10 @@ package com.example.tickit.vms.response;
 
 import java.util.UUID;
 
+import com.example.tickit.enums.UserRoles;
 import com.example.tickit.enums.UserStatuses;
 
-public class UserResponseVM {
+public class UserCreationResponseVM {
 	private Long id;
 	private UUID publicId = UUID.randomUUID();
 	private String email;
@@ -12,6 +13,7 @@ public class UserResponseVM {
 	private String firstName;
 	private String lastName;
 	private UserStatuses status;
+	private UserRoles userRole;
 
 	public String getUserName() {
 		return userName;
@@ -69,4 +71,11 @@ public class UserResponseVM {
 		this.status = status;
 	}
 
+	public UserRoles getUserRole() {
+		return userRole;
+	}
+
+	public void setUserRole(UserRoles userRole) {
+		this.userRole = userRole;
+	}
 }

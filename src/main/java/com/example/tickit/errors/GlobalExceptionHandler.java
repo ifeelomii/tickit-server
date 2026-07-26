@@ -42,4 +42,10 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(exObj, ex.getStatus());
 	}
 
+	@ExceptionHandler(InvalidRequestException.class)
+	public ResponseEntity<GlobalExceptionResponseObject> handleInvalidRequestException(InvalidRequestException ex) {
+		GlobalExceptionResponseObject exObj = new GlobalExceptionResponseObject(ex.getTitle(), ex.getMessage(),
+				ex.getEntityName(), ex.getStatus().value());
+		return new ResponseEntity<>(exObj, ex.getStatus());
+	}
 }

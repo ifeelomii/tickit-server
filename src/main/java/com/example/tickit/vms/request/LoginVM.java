@@ -1,24 +1,19 @@
 package com.example.tickit.vms.request;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class LoginVM {
-	private String email;
-	private String userName;
+
+	@NotBlank
+	private String usernameOrEmail;
 	private String password;
 
-	public String getEmail() {
-		return email;
+	public String getUsernameOrEmail() {
+		return usernameOrEmail;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUsernameOrEmail(String usernameOrEmail) {
+		this.usernameOrEmail = usernameOrEmail;
 	}
 
 	public String getPassword() {
