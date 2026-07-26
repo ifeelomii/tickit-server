@@ -1,19 +1,16 @@
-package com.example.tickit.vms.response;
+package com.example.tickit.filters;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import java.util.UUID;
 
-@JsonInclude(value = Include.NON_NULL)
-public class UserCreationResponseVM {
+public class UserFilters {
 	private Long id;
-	private String publicId;
+	private UUID publicId;
 	private String email;
 	private String userName;
 	private String firstName;
 	private String lastName;
 	private String status;
-	private String userRole;
-	private String createDate;
+	private String userRoles;
 
 	public Long getId() {
 		return id;
@@ -23,11 +20,11 @@ public class UserCreationResponseVM {
 		this.id = id;
 	}
 
-	public String getPublicId() {
+	public UUID getPublicId() {
 		return publicId;
 	}
 
-	public void setPublicId(String publicId) {
+	public void setPublicId(UUID publicId) {
 		this.publicId = publicId;
 	}
 
@@ -71,20 +68,11 @@ public class UserCreationResponseVM {
 		this.status = status;
 	}
 
-	public String getUserRole() {
-		return userRole;
+	public String getUserRoles() {
+		return userRoles;
 	}
 
-	public void setUserRole(String userRole) {
-		this.userRole = userRole;
+	public void setUserRoles(String userRoles) {
+		this.userRoles = userRoles;
 	}
-
-	public String getCreateDate() {
-		return createDate;
-	}
-
-	public void setCreateDate(String createDate) {
-		this.createDate = createDate;
-	}
-
 }

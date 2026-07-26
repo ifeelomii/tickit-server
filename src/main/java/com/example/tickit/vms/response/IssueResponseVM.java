@@ -1,5 +1,9 @@
 package com.example.tickit.vms.response;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.example.tickit.domains.Issue;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -67,6 +71,33 @@ public class IssueResponseVM {
 
 	public Long getSprintId() {
 		return sprintId;
+	}
+
+	public IssueResponseVM mapToResponse(Issue issue) {
+
+		IssueResponseVM response = new IssueResponseVM();
+
+		response.setId(issue.getId());
+		response.setTitle(issue.getTitle());
+		response.setDescription(issue.getDescription());
+
+		if (issue.getStatus() != null) {
+			response.setStatus(issue.getStatus().getName());
+		}
+
+		if (issue.getAssignee() != null) {
+			response.setAssigneeId(issue.getAssignee().getId());
+		}
+
+		if (issue.getSprint() != null) {
+			response.setSprintId(issue.getSprint().getId());
+		}
+
+		return response;
+	}
+
+	public List<IssueResponseVM> mapListToResponseList(List<Issue> issues) {
+		return issues.stream().map(this::mapToResponse).collect(Collectors.toList());
 	}
 
 }

@@ -1,11 +1,12 @@
 package com.example.tickit.domains;
 
-import java.util.UUID;
+import java.time.LocalDateTime;
 
 import com.example.tickit.enums.UserRoles;
 import com.example.tickit.enums.UserStatuses;
 import com.example.tickit.vms.response.LoginResponseVM;
 import com.example.tickit.vms.response.UserCreationResponseVM;
+import com.github.f4b6a3.ulid.UlidCreator;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,6 +15,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
@@ -24,7 +26,7 @@ public class User {
 	private Long id;
 
 	@Column(name = "public_id", nullable = false, unique = true, updatable = false)
-	private UUID publicId = UUID.randomUUID();
+	private String publicId;
 
 	@Column(name = "email", unique = true, nullable = false)
 	private String email;
@@ -49,6 +51,16 @@ public class User {
 	@Column(nullable = false)
 	private UserRoles userRoles = UserRoles.USER;
 
+	@Column(name = "create_date")
+	private LocalDateTime createDate = LocalDateTime.now();
+
+	@PrePersist
+	public void prePersist() {
+		if (publicId == null) {
+			publicId = getPublicIdPrefix() + "-" + UlidCreator.getUlid();
+		}
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -57,11 +69,11 @@ public class User {
 		this.id = id;
 	}
 
-	public UUID getPublicId() {
+	public String getPublicId() {
 		return publicId;
 	}
 
-	public void setPublicId(UUID publicId) {
+	public void setPublicId(String publicId) {
 		this.publicId = publicId;
 	}
 
@@ -121,6 +133,14 @@ public class User {
 		this.userRoles = userRoles;
 	}
 
+	public LocalDateTime getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(LocalDateTime createDate) {
+		this.createDate = createDate;
+	}
+
 	public UserCreationResponseVM toUserCreationResponseVM() {
 		UserCreationResponseVM response = new UserCreationResponseVM();
 		response.setId(this.getId());
@@ -129,8 +149,9 @@ public class User {
 		response.setLastName(this.getLastName());
 		response.setEmail(this.getEmail());
 		response.setPublicId(this.getPublicId());
-		response.setStatus(this.getStatus());
-		response.setUserRole(this.getUserRoles());
+		response.setStatus(this.getStatus().toString());
+		response.setUserRole(this.getUserRoles().toString());
+		response.setCreateDate(this.getCreateDate().toString());
 		return response;
 	}
 
@@ -144,6 +165,17 @@ public class User {
 		response.setEmail(this.getEmail());
 		response.setStatus(this.getStatus());
 		response.setUserRole(this.getUserRoles());
+		response.setCreateDate(this.getCreateDate());
 		return response;
+	}
+
+	private String getPublicIdPrefix() {
+		return switch (this.userRoles) {
+		case ADMIN -> "ADM";
+		case DEVELOPER -> "DEV";
+		case TESTER -> "TST";
+		case USER -> "USR";
+		default -> "UNKNOWN";
+		};
 	}
 }
