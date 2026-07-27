@@ -38,15 +38,10 @@ public class SecurityConfig {
 		http.cors(cors -> {
 		}).csrf(csrf -> csrf.disable())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-<<<<<<< Updated upstream
-				.authorizeHttpRequests(auth -> auth.requestMatchers("/api/user/register-user", "/api/user/login")
-						.permitAll().anyRequest().authenticated())
-=======
 				.authorizeHttpRequests(auth -> auth.requestMatchers(publicAPIs).permitAll().requestMatchers(adminAPIs)
 						.hasRole(UserRoles.ADMIN.toString()).requestMatchers(devAPIs)
 						.hasRole(UserRoles.DEVELOPER.toString()).requestMatchers(testerAPIs)
 						.hasRole(UserRoles.TESTER.toString()).anyRequest().authenticated())
->>>>>>> Stashed changes
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}
