@@ -16,12 +16,16 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.example.tickit.enums.UserRoles;
+
 @Configuration
 public class SecurityConfig {
 
-	private String[] adminAPIs = { "/api/user/create-admin-user" };
-	private String[] devAPIs = { "" };
-	private String[] testerAPIs = { "" };
+	private String[] publicAPIs = { "/api/user/register-user", "/api/user/login" };
+
+	private String[] adminAPIs = { "/api/user/create-admin-user", "/api/user/get-users", "/api/user/get-user/{id}" };
+	private String[] devAPIs = { "/api/user/get-users", "/api/user/get-user/{id}" };
+	private String[] testerAPIs = { "/api/user/get-users", "/api/user/get-user/{id}" };
 
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -34,8 +38,10 @@ public class SecurityConfig {
 		http.cors(cors -> {
 		}).csrf(csrf -> csrf.disable())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authorizeHttpRequests(auth -> auth.requestMatchers("/api/user/register-user", "/api/user/login",
-						"/api/user/get-users", "/api/user/get-user/{id}").permitAll().anyRequest().authenticated())
+				.authorizeHttpRequests(auth -> auth.requestMatchers(publicAPIs).permitAll().requestMatchers(adminAPIs)
+						.hasRole(UserRoles.ADMIN.toString()).requestMatchers(devAPIs)
+						.hasRole(UserRoles.DEVELOPER.toString()).requestMatchers(testerAPIs)
+						.hasRole(UserRoles.TESTER.toString()).anyRequest().authenticated())
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}
