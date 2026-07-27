@@ -1,9 +1,12 @@
 package com.example.tickit.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,14 +19,17 @@ import com.example.tickit.enums.UserRoles;
 import com.example.tickit.enums.UserStatuses;
 import com.example.tickit.errors.InvalidRequestException;
 import com.example.tickit.errors.UserNotFoundException;
+import com.example.tickit.filters.UserFilters;
 import com.example.tickit.repositories.UserRepository;
 import com.example.tickit.security.JWTService;
+import com.example.tickit.specifications.UserSpecifications;
 import com.example.tickit.utils.SecurityUtils;
 import com.example.tickit.utils.StringUtils;
 import com.example.tickit.vms.request.LoginVM;
 import com.example.tickit.vms.request.UserCreationRequestVM;
 import com.example.tickit.vms.response.LoginResponseVM;
 import com.example.tickit.vms.response.UserCreationResponseVM;
+import com.example.tickit.vms.response.UserInfoResponsVM;
 
 @Service
 public class UserService {
@@ -50,6 +56,19 @@ public class UserService {
 	public User findOne(Long userId) {
 		return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User Not Found",
 				"No User Available", ENTITY_NAME, HttpStatus.BAD_REQUEST));
+	}
+
+	@Transactional
+	public List<User> findAllUsers() {
+		return userRepository.findAll();
+	}
+
+	public User findReporter(Long reporterId) {
+		return findOne(reporterId);
+	}
+
+	public User findAssignee(Long assigneeId) {
+		return findOne(assigneeId);
 	}
 
 	@Transactional
@@ -91,7 +110,6 @@ public class UserService {
 		userRepository.saveAndFlush(user);
 
 		return user.toUserCreationResponseVM();
-
 	}
 
 	@Transactional(readOnly = true)
@@ -116,11 +134,16 @@ public class UserService {
 				: userRepository.findByUserName(userNameOrEmail);
 	}
 
-	public User findReporter(Long reporterId) {
-		return findOne(reporterId);
+	public List<UserInfoResponsVM> getAllUsers(Pageable pageable, UserFilters userFilters) {
+		Page<User> userPage = findFromSpecifications(userFilters, pageable);
+		return new UserInfoResponsVM().toUserInfoResponseList(userPage.getContent());
 	}
 
-	public User findAssignee(Long assigneeId) {
-		return findOne(assigneeId);
+	private Page<User> findFromSpecifications(UserFilters userFilters, Pageable pageable) {
+		return userRepository.findAll(UserSpecifications.getUserSpecifications(userFilters), pageable);
+	}
+
+	public UserInfoResponsVM getUserById(Long id) {
+		return new UserInfoResponsVM().toUserInfoResponse(findOne(id));
 	}
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.example.tickit.domains.Issue;
-import com.example.tickit.dto.IssueFilters;
+import com.example.tickit.filters.IssueFilters;
 
 import jakarta.persistence.criteria.Predicate;
 

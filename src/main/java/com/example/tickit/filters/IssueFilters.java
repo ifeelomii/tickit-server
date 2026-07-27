@@ -1,4 +1,4 @@
-package com.example.tickit.dto;
+package com.example.tickit.filters;
 
 public class IssueFilters {
 	private String title;

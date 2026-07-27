@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.tickit.dto.IssueFilters;
+import com.example.tickit.filters.IssueFilters;
 import com.example.tickit.services.IssueService;
 import com.example.tickit.vms.request.IssueRequestVM;
 import com.example.tickit.vms.response.IssueResponseVM;

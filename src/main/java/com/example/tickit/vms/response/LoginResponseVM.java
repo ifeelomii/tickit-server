@@ -1,8 +1,13 @@
 package com.example.tickit.vms.response;
 
+import java.time.LocalDateTime;
+
 import com.example.tickit.enums.UserRoles;
 import com.example.tickit.enums.UserStatuses;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+@JsonInclude(value = Include.NON_NULL)
 public class LoginResponseVM {
 	private Long userId;
 	private String publicId;
@@ -13,6 +18,7 @@ public class LoginResponseVM {
 	private UserStatuses status;
 	private UserRoles userRole;
 	private String jwtToken;
+	private LocalDateTime createDate;
 
 	public Long getUserId() {
 		return userId;
@@ -84,5 +90,13 @@ public class LoginResponseVM {
 
 	public void setJwtToken(String jwtToken) {
 		this.jwtToken = jwtToken;
+	}
+
+	public LocalDateTime getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(LocalDateTime createDate) {
+		this.createDate = createDate;
 	}
 }

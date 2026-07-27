@@ -1,7 +1,6 @@
 package com.example.tickit.services;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -14,10 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.tickit.domains.Issue;
 import com.example.tickit.domains.Status;
 import com.example.tickit.domains.User;
-import com.example.tickit.dto.IssueFilters;
 import com.example.tickit.errors.IssueNotFoundException;
 import com.example.tickit.errors.StatusNotFoundException;
 import com.example.tickit.events.AuditEvent;
+import com.example.tickit.filters.IssueFilters;
 import com.example.tickit.repositories.IssueRepository;
 import com.example.tickit.repositories.StatusRepository;
 import com.example.tickit.specifications.IssueSpecifications;
@@ -51,6 +50,15 @@ public class IssueService {
 	}
 
 	@Transactional
+	private Issue findOne(Long issueId) {
+		Issue issue = issueRepository.findById(issueId)
+				.orElseThrow(() -> new IssueNotFoundException("Issue not found",
+						String.format("Issue with id %s does not exist", issueId.toString()), ENTITY_NAME,
+						HttpStatus.BAD_REQUEST));
+		return issue;
+	}
+
+	@Transactional
 	public IssueResponseVM createNewIssue(IssueRequestVM request) {
 
 		Status status = statusRepository.findById(request.getStatusId())
@@ -68,54 +76,27 @@ public class IssueService {
 		issue.setReporter(reporter);
 		issue.setAssignee(assignee);
 		Issue saved = save(issue);
-		return mapToResponse(saved);
+		return new IssueResponseVM().mapToResponse(saved);
 	}
 
 	@Transactional
 	public IssueResponseVM updateIssue(Long issueId, IssueRequestVM request) {
 
-		Issue issue = issueRepository.findById(issueId)
-				.orElseThrow(() -> new IssueNotFoundException("Issue not found",
-						String.format("Issue with id %s does not exist", issueId.toString()), ENTITY_NAME,
-						HttpStatus.BAD_REQUEST));
+		Issue issue = findOne(issueId);
 		issue.setTitle(request.getTitle());
 		issue.setDescription(request.getDescription());
 
 		Issue savedIssue = issueRepository.saveAndFlush(issue);
-		return mapToResponse(savedIssue);
+		return new IssueResponseVM().mapToResponse(savedIssue);
 	}
 
 	public List<IssueResponseVM> getAllIssues(IssueFilters issueFilters, Pageable pageable) {
-		Page<Issue> issueList = issueRepository.findAll(IssueSpecifications.getIssueSpecifications(issueFilters),
-				pageable);
-		return mapListToResponseList(issueList.getContent());
+		Page<Issue> issueList = findFromSpecifications(issueFilters, pageable);
+		return new IssueResponseVM().mapListToResponseList(issueList.getContent());
 	}
 
-	private IssueResponseVM mapToResponse(Issue issue) {
-
-		IssueResponseVM response = new IssueResponseVM();
-
-		response.setId(issue.getId());
-		response.setTitle(issue.getTitle());
-		response.setDescription(issue.getDescription());
-
-		if (issue.getStatus() != null) {
-			response.setStatus(issue.getStatus().getName());
-		}
-
-		if (issue.getAssignee() != null) {
-			response.setAssigneeId(issue.getAssignee().getId());
-		}
-
-		if (issue.getSprint() != null) {
-			response.setSprintId(issue.getSprint().getId());
-		}
-
-		return response;
-	}
-
-	private List<IssueResponseVM> mapListToResponseList(List<Issue> issues) {
-		return issues.stream().map(this::mapToResponse).collect(Collectors.toList());
+	private Page<Issue> findFromSpecifications(IssueFilters issueFilters, Pageable pageable) {
+		return issueRepository.findAll(IssueSpecifications.getIssueSpecifications(issueFilters), pageable);
 	}
 
 }
